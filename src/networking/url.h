@@ -8,7 +8,7 @@ namespace Networking {
       bool isValid();
       std::string getPath();
       std::string getHost();
-      std::string getProtocal();
+      std::string getProtocol();
       std::string getQuery();
     private:
       std::string url;

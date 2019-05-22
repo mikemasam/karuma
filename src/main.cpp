@@ -3,12 +3,9 @@
 #include <algorithm>
 #include "core/web.h"
 #include "core/controller.h"
-#include "networking/routes.h"
 
 using string = std::string;
 using Controller = Networking::Controller;
-using Routes = Networking::Routes;
-using Route = Networking::Route;
 using Web = Core::Web;
 
 
@@ -20,7 +17,10 @@ class UserController : public Controller {
 };
 
 std::string UserController::index(){
-  return "User Index";
+  std::cout << "query = " << this->getUrl()->getQuery() << std::endl;
+  std::cout << "url = " << this->getUrl()->getPath() << std::endl;
+  std::cout << "protocol = " << this->getUrl()->getProtocol() << std::endl;
+  return "Index Called";
 }
 
 UserController::~UserController(){
@@ -29,32 +29,14 @@ UserController::~UserController(){
 
 
 
-class MyRoutes : public Routes {
-  public:
-    MyRoutes();
-    void anonymousRoutes() override;
-    //const std::vector<Route> getRoutes();
-};
-
-MyRoutes::MyRoutes() : Routes(){
-}
-
-
-void MyRoutes::anonymousRoutes(){
-  this->addRoute("/user/{id}/profile/");
-}
-
-
-
-
 
 int main(){
-  MyRoutes m; 
-  std::cout << m.getRoutes().size() << std::endl;
   Web *web = new Web();
+  web->addRoute(std::make_shared<UserController>(),"/user/{id}/profile/");
   web->setCurrentUrl("http:://google.com/docs/ma dan.pdf");
   web->setCurrentUrl("http:://google.com/user/dan");
-  web->setCurrentUrl("http:://google.com/user/1/profile");
+  web->setCurrentUrl("http:://google.com/user/1/profile?213&w=1");
+  std::cout << web->getRoutes().size() << std::endl;
   return 1;
 }
 

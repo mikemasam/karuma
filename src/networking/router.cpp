@@ -1,4 +1,4 @@
-#include "routing.h"
+#include "router.h"
 
 
 namespace Networking {
@@ -40,9 +40,7 @@ namespace Networking {
         match_count++;
       }
     }
-
       //std::cout <<"[" << match << " - #" << match_count << "] values size " << this->_route_values.size() << std::endl;
-
       if(match_count == _match_parts.size())
         return true;
       this->_route_values.clear();

@@ -24,7 +24,7 @@ using namespace std;
       _valid = false;
       return;
     }
-    const string prot_end("://");
+    const string prot_end(":://");
     string::const_iterator prot_i = search(url_s.begin(), url_s.end(),
         prot_end.begin(), prot_end.end());
     _protocol.reserve(distance(url_s.begin(), prot_i));
@@ -54,5 +54,13 @@ using namespace std;
   std::string Url::getPath(){
     return this->_path;
   }
+
+  std::string Url::getQuery(){
+    return this->_query;
+  }
+      std::string Url::getProtocol(){
+        return this->_protocol;
+      }
+
 
 }

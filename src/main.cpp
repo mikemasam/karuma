@@ -20,6 +20,7 @@ std::string UserController::index(){
   std::cout << "query = " << this->getUrl()->getQuery() << std::endl;
   std::cout << "url = " << this->getUrl()->getPath() << std::endl;
   std::cout << "protocol = " << this->getUrl()->getProtocol() << std::endl;
+
   return "Index Called";
 }
 
@@ -32,11 +33,13 @@ UserController::~UserController(){
 
 int main(){
   Web *web = new Web();
+  web->serve("127.0.0.1","9999");
   web->addRoute(std::make_shared<UserController>(),"/user/{id}/profile/");
-  web->setCurrentUrl("http:://google.com/docs/ma dan.pdf");
-  web->setCurrentUrl("http:://google.com/user/dan");
   web->setCurrentUrl("http:://google.com/user/1/profile?213&w=1");
   std::cout << web->getRoutes().size() << std::endl;
+  getchar();
+  delete web;
+  getchar();
   return 1;
 }
 

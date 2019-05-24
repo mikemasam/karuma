@@ -5,9 +5,11 @@ src = $(wildcard src/*.cpp src/**/*.cpp)
 obj = $(src:.cpp=.o)
 
 #$(ccsrc:.cc=.o)  
-libs = 
-LDFLAGS = -lrt -lm 
-CXXFLAGS = -Wall -g 
+libs 			= -lboost_filesystem -lboost_thread -lboost_system -lpthread
+LDFLAGS 	= -lrt -lm $(libs)
+CXXFLAGS 	= -Wall -g
+CXXFLAGS▸+= -std=c++11
+
 #-O2 
 
 

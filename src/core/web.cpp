@@ -7,10 +7,15 @@
 #include "web.h"
 
 namespace Core {
-  using string = std::string;
-  using Router = Networking::Router;
-  using Url = Networking::Url;
 
+  Web::Web(){
+      this->server = std::make_shared<Server>();
+  }
+  void Web::serve(std::string address, std::string port){
+    this->server->address = address;
+    this->server->port = port;
+    std::thread{std::bind(&Server::serve,server)}.detach();
+  }
   void Web::addRoute(std::shared_ptr<Controller> cn,std::string route, bool anonymous){
     this->routes.push_back(Route(cn,route,anonymous));
   }

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include "core/web.h"
-#include "core/controller.h"
+#include "../src/core/web.h"
+#include "../src/core/controller.h"
 
 using string = std::string;
 using Controller = Networking::Controller;

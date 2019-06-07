@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../utils.h"
+#include "../helpers/utils.h"
 #include "../networking/url.h"
 
 namespace Networking {

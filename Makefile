@@ -24,9 +24,9 @@ DEPS = $(OBJECTS:.o=.d)
 
 # flags #
 COMPILE_FLAGS = -std=c++14 -Wall -Wextra -g
-INCLUDES = -I include/ -I /usr/local/include
+INCLUDES = -I ./include 
 # Space-separated pkg-config libraries used by this project
-LIBS = -lboost_filesystem -lboost_thread -lboost_system -lpthread
+LIBS = -lboost_filesystem -lboost_thread -lboost_system -lpthread -lcrypto
 
 
 .PHONY: default_target

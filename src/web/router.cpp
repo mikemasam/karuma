@@ -1,7 +1,8 @@
 #include "router.h"
+#include "../helpers/utils.h"
 
 
-namespace Networking {
+namespace Web {
   using string = std::string;
   bool Router::match(string match){
     if(this->parts.size() < 1) 
@@ -20,7 +21,7 @@ namespace Networking {
       return true;
 
     unsigned int match_count = 0;
-    std::vector<std::string> _match_parts = Utils::explode(match,'/');
+    std::vector<std::string> _match_parts = Helpers::Utils::explode(match,'/');
 
     for(unsigned int i = 0;i < _match_parts.size();i++){
       std::string _match_part  = _match_parts[i];
@@ -32,7 +33,7 @@ namespace Networking {
       std::string _regex_match;
       if(part == _match_part){
         match_count++;
-      }else if(Utils::regex(_match_part,"\\{(.*)\\}",_regex_match)){
+      }else if(Helpers::Utils::regex(_match_part,"\\{(.*)\\}",_regex_match)){
         RouteValue rv;
         rv.name = _regex_match;
         rv.value = _match_part;
@@ -49,7 +50,7 @@ namespace Networking {
 
   Router::Router(std::shared_ptr<Url> &url){
     if(url->isValid()){
-      this->parts = Utils::explode(url->getPath(),'/');
+      this->parts = Helpers::Utils::explode(url->getPath(),'/');
     }else{
 
     }

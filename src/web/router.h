@@ -2,11 +2,10 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../helpers/utils.h"
 #include "../networking/url.h"
 
-namespace Networking {
-using Url = Networking::Url;
+namespace Web {
+  using Url = Networking::Url;
   struct RouteValue {
     std::string name;
     std::string value;

@@ -1,19 +1,19 @@
 #include "controller.h"
-#include "web.h"
-#include <memory>
-namespace Core {
+#include "web-server.h"
+#include "client.h"
+namespace Web {
   std::string Controller::index(){
     return "Index Base";
   }
 
-      void Controller::init(Web *web){
-        this->web = web;
-      }
+  void Controller::init(Client *client){
+    this->client = client;
+  }
 
-      const Web* Controller::getContext(){
-        return this->web;
-      }
-      const std::shared_ptr<Url> Controller::getUrl(){
-        return this->web->getUrl();
-      }
+  const WebServer* Controller::getContext(){
+    return this->client->getWeb();
+  }
+  const std::shared_ptr<Url> Controller::getUrl(){
+    return this->client->getUrl();
+  }
 }

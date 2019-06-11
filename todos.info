@@ -1,2 +1,0 @@
-*jwt secret required when using web module
-  -show error if not configured

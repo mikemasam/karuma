@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../web/controller.h"
+#include "controller.h"
 
 #pragma once
-namespace Networking {
-  using Controller = Core::Controller;
+namespace Web {
+  using Controller = Web::Controller;
   using string = std::string;
   struct Route {
     Route(std::shared_ptr<Controller> _controller, std::string _path,bool _anonymous) : controller(_controller), path(_path), anonymous(_anonymous){}

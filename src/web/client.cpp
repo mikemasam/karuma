@@ -1,11 +1,35 @@
 #include "client.h"
 #include "send.h"
+#include "web-server.h"
+#include "route.h"
+#include "router.h"
+#include "../helpers/utils.h"
 
-namespace Networking {
 
+namespace Web {
 
-  Client::Client(){
-    std::cout << "New Client" << std::endl;
+  Client::Client(WebServer *web_server) {
+    this->web_server = web_server;
+    this->client_id = Helpers::Utils::random_uuid();
+    // example using memcpy
+
+    std::cout << "New Client : " << this->client_id << std::endl;
+  }
+
+  Client::~Client(){
+    std::cout << "Client Disconnected:" << this->getClientId() << std::endl;
+  }
+
+  std::string Client::getClientId(){
+    return this->client_id;
+  }
+
+  WebServer* Client::getWeb() {
+    return web_server;
+  }
+
+  std::shared_ptr<Url> Client::getUrl() {
+    return url;
   }
 
   bool Client::isDone() {
@@ -15,7 +39,7 @@ namespace Networking {
   http::response<http::string_body> Client::getResponse(auto version, auto keep_alive){
     http::response<http::string_body> res{http::status::not_found, version};
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    res.set(http::field::content_type, "text/html");
+    res.set(http::field::content_type, "application/json");
     res.keep_alive(keep_alive);
     res.body() = "The resource '' was not found.";
     res.prepare_payload();
@@ -27,15 +51,15 @@ namespace Networking {
   // caller to pass a generic lambda for receiving the response.
   template<class Body, class Allocator, class Send>
     void Client::handle_request(http::request<Body, http::basic_fields<Allocator>>&&  req, Send&& send) {
+      //this->web_server;
       send(this->getResponse(req.version(),req.keep_alive()));
-      this->done = true;
     }
 
   //------------------------------------------------------------------------------
 
   // Report a failure
   void Client::fail(beast::error_code ec, char const* what) {
-    std::cerr << what << ": " << ec.message() << "\n";
+    std::cerr << "ClientError-:" << what << ": " << ec.message() << "\n";
   }
 
 
@@ -46,35 +70,67 @@ namespace Networking {
   void Client::new_connection( tcp::socket& socket){
     bool close = false;
     beast::error_code ec;
+
     // This buffer is required to persist across reads
     beast::flat_buffer buffer;
+
     // This lambda is used to send messages
     Send<tcp::socket> lambda{socket, close, ec};
-    for(;;)
-    {
+
+    for(;;) {
       // Read a request
       http::request<http::string_body> req;
       http::read(socket, buffer, req, ec);
 
-      if(ec == http::error::end_of_stream)
+      //check if it's end of file/connection
+      if(ec == http::error::end_of_stream){
+        this->Done();
         break;
-      if(ec)
+      }
+
+      if(ec) {
+        this->Done();
         return this->fail(ec, "read");
+      }
 
       // Send the response
       this->handle_request(std::move(req),lambda);
-      if(ec)
+      if(ec) {
+        this->Done();
         return this->fail(ec, "write");
+      }
 
-      if(close)
-      {
+      if(close) {
         // This means we should close the connection, usually because
         // the response indicated the "Connection: close" semantic.
+        this->Done();
         break;
       }
     }
     // Send a TCP shutdown
     socket.shutdown(tcp::socket::shutdown_send, ec);
     // At this point the connection is closed gracefully
+  }
+
+  void Client::Done(){
+    this->done = true;
+  }
+
+
+  void Client::findRoute(){
+    bool found = false;
+    Router router(this->url);
+    for(unsigned int j = 0;j < this->web_server->getRoutes().size();j++){
+      if(router.match(this->web_server->getRoutes()[j].path)){
+        this->web_server->getRoutes()[j].controller->init(this);
+        std::cout << this->web_server->getRoutes()[j].controller->index() << std::endl;
+        found = true;
+      }else{
+        //std::cout << "Route not found = " << this->url->getPath() << std::endl;
+      }
+    }
+    if(!found)
+      std::cout << "Route not found at all" << std::endl << "-----------------------" << std::endl;
+
   }
 }

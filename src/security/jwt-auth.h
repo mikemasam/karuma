@@ -1,12 +1,13 @@
 #include <iostream>
-#include <dotenv.h>
+#include <chrono>
+#include <jwt-cpp/jwt.h>
 
 #pragma once
-namespace security {
+namespace Security {
   struct JwtClaim{
     std::string name;
-    std::string body
-  }
+    std::string body;
+  };
   class JwtAuth {
     JwtAuth();
     std::string create(int seconds);

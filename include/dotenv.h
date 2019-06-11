@@ -1,5 +1,4 @@
 #pragma once
-
 #include <fstream>
 #include <stdexcept>
 #include <unordered_map>
@@ -306,6 +305,7 @@ namespace dotenv
         {
             binded = nullptr;
             bond = false;
+            (void)s;
         }
 
         inline void insert_to_map()

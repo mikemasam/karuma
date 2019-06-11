@@ -1,4 +1,4 @@
-###Code Structure
+### Code Structure
 * main.cpp
   * core
     * app ? handle core app functions -> segfaults and etc -> should manage the running services in the future
@@ -14,7 +14,7 @@
     * url
   * helpers
     * utils -> helper functions
-###TODO: 
+### TODO: 
   * add controller and route list with name=>route
   * search through routes and initiate controller then call handle request function with the name of the route found and other data or just reuse the controller
   * reusing might mix data and also thread safe thing.

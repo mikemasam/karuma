@@ -116,14 +116,17 @@ namespace Web {
     this->done = true;
   }
 
-
+  //find route match
   void Client::findRoute(){
     bool found = false;
-    Router router(this->url);
-    for(unsigned int j = 0;j < this->web_server->getRoutes().size();j++){
-      if(router.match(this->web_server->getRoutes()[j].path)){
-        this->web_server->getRoutes()[j].controller->init(this);
-        std::cout << this->web_server->getRoutes()[j].controller->index() << std::endl;
+    std::vector<Route> routes = this->web_server->getRoutes();
+
+    for(unsigned int j = 0;j <routes.size();j++){
+      Route route = routes[j];
+      if(route.match(this->url)){
+        //this->web_server->getRoutes()[j].controller->init(this);
+        //std::cout << this->web_server->getRoutes()[j].controller->index() << std::endl;
+        std::cout << "Found One" << std::endl;
         found = true;
       }else{
         //std::cout << "Route not found = " << this->url->getPath() << std::endl;

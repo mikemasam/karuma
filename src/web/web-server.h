@@ -16,8 +16,7 @@ namespace Web {
     public:
       WebServer();
       void processRequest(std::string url);
-      void addRoute(std::shared_ptr<Controller> cn,std::string route, bool anonymous);
-      void addRoute(std::shared_ptr<Controller> cn,std::string route);
+      void addRoute(Route route);
       const std::vector<Route> getRoutes();
       void serve(std::string address, std::string port);
       std::shared_ptr<Server> server;

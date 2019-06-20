@@ -13,10 +13,8 @@ namespace Web {
 
   class Router {
     public:
-      bool match(std::string match);
       Router(std::shared_ptr<Url> &url);
     private:
-      std::vector<std::string> parts;
       std::string path;
       std::vector<RouteValue> _route_values;
   };

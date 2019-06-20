@@ -3,13 +3,17 @@
 #include <algorithm>
 #include <cctype>
 #include <functional>
+#include "../helpers/utils.h"
 
 namespace Networking {
-using namespace std;
+  using namespace std;
 
   Url::Url(string url){
     this->url = url;
     parse(this->url);
+    if(this->isValid()){
+      this->parts = Helpers::Utils::explode(this->getPath(),'/');
+    }
   }
   //credits
   //stackoverflow.com_
@@ -58,9 +62,12 @@ using namespace std;
   std::string Url::getQuery(){
     return this->_query;
   }
-      std::string Url::getProtocol(){
-        return this->_protocol;
-      }
 
+  std::string Url::getProtocol(){
+    return this->_protocol;
+  }
 
+  std::vector<std::string> Url::getParts(){
+    return this->parts;
+  }
 }

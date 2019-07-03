@@ -2,7 +2,6 @@
 #include "send.h"
 #include "web-server.h"
 #include "route.h"
-#include "router.h"
 #include "../helpers/utils.h"
 
 
@@ -36,13 +35,19 @@ namespace Web {
     return this->done;
   }
 
-  http::response<http::string_body> Client::getResponse(auto version, auto keep_alive){
-    http::response<http::string_body> res{http::status::not_found, version};
+  http::response<http::string_body> Client::getResponse(ControllerResponse* controller_res, int version){
+    //construct response
+    http::response<http::string_body> res{boost::beast::http::int_to_status(controller_res->status), version};
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    res.set(http::field::content_type, "application/json");
-    res.keep_alive(keep_alive);
-    res.body() = "The resource '' was not found.";
+    res.set(http::field::content_type, controller_res->type);
+    res.keep_alive(true);
+    if(controller_res != NULL){
+      res.body() = controller_res->data;
+    }else{
+      res.body() = "";
+    }
     res.prepare_payload();
+    //return http response object
     return res;
   }
   // This function produces an HTTP response for the given
@@ -52,7 +57,9 @@ namespace Web {
   template<class Body, class Allocator, class Send>
     void Client::handle_request(http::request<Body, http::basic_fields<Allocator>>&&  req, Send&& send) {
       //this->web_server;
-      send(this->getResponse(req.version(),req.keep_alive()));
+      this->url = std::make_shared<Url>(Helpers::Utils::target_normalize("http://localhost", req.target()),req.method_string().to_string());
+      auto res = this->findRoute();
+      send(this->getResponse(res,req.version()));
     }
 
   //------------------------------------------------------------------------------
@@ -117,23 +124,26 @@ namespace Web {
   }
 
   //find route match
-  void Client::findRoute(){
+  ControllerResponse* Client::findRoute(){
+    ControllerResponse* res;
     bool found = false;
     std::vector<Route> routes = this->web_server->getRoutes();
 
     for(unsigned int j = 0;j <routes.size();j++){
       Route route = routes[j];
-      if(route.match(this->url)){
+      auto o = route.match(this->url);
+      if(o != NULL){
         //this->web_server->getRoutes()[j].controller->init(this);
         //std::cout << this->web_server->getRoutes()[j].controller->index() << std::endl;
+        res = o->controller->processRequest(o->path,o->values);
         std::cout << "Found One" << std::endl;
         found = true;
       }else{
-        //std::cout << "Route not found = " << this->url->getPath() << std::endl;
+        std::cout << "Route " << route.getName() << " not found on path " << this->url->getPath() << std::endl;
       }
     }
     if(!found)
-      std::cout << "Route not found at all" << std::endl << "-----------------------" << std::endl;
-
+      std::cout << this->url->getRaw() << " - Route not found at all" << std::endl << "-----------------------" << std::endl;
+    return res;
   }
 }

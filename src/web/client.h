@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include "../networking/url.h"
+#include "controller_response.h"
 
 #pragma once
 
@@ -44,7 +45,7 @@ namespace Web {
       void new_connection(tcp::socket& socket);
       WebServer *web_server;
 
-      void findRoute();
+      ControllerResponse* findRoute();
       std::shared_ptr<Url> url;
 
 
@@ -53,6 +54,6 @@ namespace Web {
 
       void fail(beast::error_code ec, char const* what);
 
-      http::response<http::string_body> getResponse(auto version, auto keep_alive);
+      http::response<http::string_body> getResponse(ControllerResponse* res, int version);
   };
 }

@@ -15,7 +15,7 @@ using Route = Web::Route;
 
 class UserController : public Controller {
   public:
-    std::string index() override;
+    std::string index();
     ~UserController();
 };
 
@@ -38,7 +38,9 @@ int main(){
   App::app_init();
   WebServer *web = new WebServer();
   web->serve("127.0.0.1","9999");
-  web->addRoute(Route(std::make_shared<UserController>(),"/user/{id}/profile/").addPath("-user-index","/user/{id}/profile/",true));
+  auto r = Route(std::make_shared<UserController>(),"/user/{id}/profile/");
+  r.addPath("-user-index","/user/{id}/profile/",true);
+  web->addRoute(r);
   //web->processRequest("http:://google.com/user/1/profile?213&w=1");
   getchar();
   return 1;

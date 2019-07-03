@@ -22,9 +22,4 @@ namespace Web {
     return this->routes;
   }
 
-  void WebServer::processRequest(string url){
-    //this->url = std::make_shared<Url>(url);
-    //this->makeRoute();
-  }
-
 }

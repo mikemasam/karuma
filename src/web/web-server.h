@@ -15,7 +15,6 @@ namespace Web {
   class WebServer {
     public:
       WebServer();
-      void processRequest(std::string url);
       void addRoute(Route route);
       const std::vector<Route> getRoutes();
       void serve(std::string address, std::string port);

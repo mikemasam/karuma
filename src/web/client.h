@@ -13,7 +13,9 @@
 #include "controller_response.h"
 
 #pragma once
-
+/*
+ * Client class in Web namespace
+ */
 namespace Web {
 
   class WebServer;
@@ -27,8 +29,16 @@ namespace Web {
 
   class Client {
     public:
+      /*
+       * Cleint - constructor
+       * Params
+       * web_server - WebServer object pointer
+       */
       Client(WebServer *web_server);
       ~Client();
+      /*
+       * init - initiate client with the socket that handles 
+       */
       static void init(tcp::socket& socket, Client *s);
       bool isDone();
       void Done();
